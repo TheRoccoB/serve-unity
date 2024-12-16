@@ -15,13 +15,20 @@ const MIME_TYPES = {
   ".data": "application/octet-stream",
   ".json": "application/json",
   ".css": "text/css",
-  ".gz": "application/octet-stream", // Gzipped files
-  ".br": "application/octet-stream", // Brotli-compressed files
 };
+
+// Helper function to get the original file MIME type
+function getMimeType(filePath) {
+  if (filePath.endsWith(".gz")) {
+    return MIME_TYPES[path.extname(filePath.replace(".gz", ""))] || "application/octet-stream";
+  } else if (filePath.endsWith(".br")) {
+    return MIME_TYPES[path.extname(filePath.replace(".br", ""))] || "application/octet-stream";
+  }
+  return MIME_TYPES[path.extname(filePath)] || "application/octet-stream";
+}
 
 http.createServer((req, res) => {
   const filePath = path.join(ROOT_DIR, req.url === "/" ? "/index.html" : req.url);
-  const ext = path.extname(filePath);
 
   // Check if the file exists
   fs.stat(filePath, (err, stats) => {
@@ -31,26 +38,24 @@ http.createServer((req, res) => {
       return;
     }
 
-    // Determine MIME type
-    const mimeType = MIME_TYPES[ext] || "application/octet-stream";
+    const mimeType = getMimeType(filePath);
 
-    // Set appropriate compression headers for .gz and .br files
+    // Serve precompressed files
     if (filePath.endsWith(".gz")) {
       res.writeHead(200, {
-        "Content-Type": mimeType.replace(/\.gz$/, ""),
+        "Content-Type": mimeType,
         "Content-Encoding": "gzip",
       });
       fs.createReadStream(filePath).pipe(res);
     } else if (filePath.endsWith(".br")) {
       res.writeHead(200, {
-        "Content-Type": mimeType.replace(/\.br$/, ""),
+        "Content-Type": mimeType,
         "Content-Encoding": "br",
       });
       fs.createReadStream(filePath).pipe(res);
     } else {
-      // Serve regular files and apply compression if the client accepts it
+      // Serve regular files and dynamically compress if supported
       const acceptEncoding = req.headers["accept-encoding"] || "";
-
       if (acceptEncoding.includes("br")) {
         res.writeHead(200, { "Content-Type": mimeType, "Content-Encoding": "br" });
         fs.createReadStream(filePath).pipe(zlib.createBrotliCompress()).pipe(res);
@@ -67,8 +72,8 @@ http.createServer((req, res) => {
   console.log(`Server is running on http://localhost:${PORT}. Press Ctrl+C to stop.`);
 });
 
-// Add this process event listener at the end of the file
-process.on('SIGINT', () => {
-  console.log('\nServer stopped. Cool game to share? Upload at https://simmer.io/upload/.');
+// Graceful shutdown
+process.on("SIGINT", () => {
+  console.log("\nServer stopped. Cool game to share? Upload at https://simmer.io/upload/.");
   process.exit(0);
 });
