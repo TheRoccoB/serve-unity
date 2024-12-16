@@ -27,11 +27,11 @@ Run the server in the directory containing your Unity WebGL build:
 serve-unity <port>
 ```
 
-Open your browser and go to: http://localhost:9000
+Open your browser and go to: http://localhost:9000 (if you set the port to 9000)
 
 ### Default Behavior
 
-If you don’t specify a port, the server defaults to 9000:
+If you don’t specify a port, the server defaults to 9000
 
 ## License
 
@@ -42,6 +42,10 @@ This project is licensed under the MIT License.
 Contributions are welcome! Feel free to open an issue or submit a pull request.
 
 ## Author
-Rocco Balsamo
+Rocco Balsamo via [simmer.io](https://simmer.io)
+
+## Etc
+
+Got a cool game to upload? https://simmer.io/upload
 
 Enjoy fast and simple Unity WebGL serving with serve-unity! 🎮
