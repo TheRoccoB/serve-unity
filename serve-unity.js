@@ -5,7 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 
-const PORT = process.env.PORT || 9000; // Use environment variable or default to 9000
+const PORT = process.argv[2] ? parseInt(process.argv[2], 10) : 9000;
 const ROOT_DIR = process.cwd(); // Serve files from the current working directory
 
 const MIME_TYPES = {
@@ -64,5 +64,11 @@ http.createServer((req, res) => {
     }
   });
 }).listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}. Press Ctrl+C to stop.`);
+});
+
+// Add this process event listener at the end of the file
+process.on('SIGINT', () => {
+  console.log('\nServer stopped. Cool game to share? Upload at https://simmer.io/upload/.');
+  process.exit(0);
 });
