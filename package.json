@@ -1,0 +1,22 @@
+{
+  "name": "serve-unity",
+  "version": "1.0.0",
+  "description": "A simple server for Unity WebGL games that supports different compression mechanisms.",
+  "main": "serve-unity.js",
+  "bin": {
+    "serve-unity": "./serve-unity.js"
+  },
+  "keywords": [
+    "unity",
+    "webgl",
+    "server",
+    "gzip",
+    "brotli",
+    "compression"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rocco Balsamo",
+  "license": "MIT"
+}
