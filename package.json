@@ -1,6 +1,6 @@
 {
   "name": "serve-unity",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A simple server for Unity WebGL games that supports different compression mechanisms.",
   "main": "serve-unity.js",
   "bin": {
