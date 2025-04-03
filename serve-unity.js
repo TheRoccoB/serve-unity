@@ -28,7 +28,8 @@ function getMimeType(filePath) {
 }
 
 http.createServer((req, res) => {
-  const filePath = path.join(ROOT_DIR, req.url === "/" ? "/index.html" : req.url);
+  const decodedUrl = decodeURIComponent(req.url === "/" ? "/index.html" : req.url);
+  const filePath = path.join(ROOT_DIR, decodedUrl);
 
   // Check if the file exists
   fs.stat(filePath, (err, stats) => {
